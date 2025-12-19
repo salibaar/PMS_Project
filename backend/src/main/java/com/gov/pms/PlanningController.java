@@ -34,3 +34,13 @@ class ObjectiveRequest {
     private boolean isBreakthrough;
     private List<Object> keyResults; 
 }
+@Data
+class ObjectiveRequest {
+    // ... các trường dữ liệu hiện tại của bạn ...
+    private String content;
+
+    // Thêm đoạn này vào để sửa lỗi biên dịch
+    public String getContent() {
+        return content;
+    }
+}
