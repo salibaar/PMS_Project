@@ -11,31 +11,28 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - "5432:5432" # Mở cổng để admin có thể truy cập kiểm tra dữ liệu
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data # Quan trọng: Giữ lại dữ liệu khi tắt container
+      - db_data:/var/lib/postgresql/data
     networks:
       - app_network
-    # Cơ chế kiểm tra sức khỏe (Healthcheck) để đảm bảo DB sẵn sàng trước khi Backend chạy
     healthcheck:
-      test:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   # 2. Dịch vụ Backend (Spring Boot API)
   backend:
-    build:./server # Đường dẫn tới mã nguồn Java
+    build: ./backend  # Đã sửa lại đường dẫn dựa trên ảnh thư mục của bạn
     container_name: spring_backend
     depends_on:
       db:
-        condition: service_healthy # Chỉ khởi động khi DB đã sẵn sàng (Fix lỗi connection refused)
+        condition: service_healthy
     environment:
-      # Lưu ý: Host là 'db' (tên service), không phải 'localhost'
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - APP_JWT_SECRET=${APP_JWT_SECRET}
     ports:
       - "8080:8080"
     networks:
@@ -43,20 +40,18 @@ services:
 
   # 3. Dịch vụ Frontend (React Client)
   frontend:
-    build:./client # Đường dẫn tới mã nguồn React
+    build: ./frontend # Đã sửa lại đường dẫn dựa trên ảnh thư mục của bạn
     container_name: react_frontend
     depends_on:
       - backend
     ports:
-      - "3000:80" # Ánh xạ cổng 80 (Nginx trong container) ra cổng 3000 của máy chủ
+      - "3000:80"
     networks:
       - app_network
 
-# Định nghĩa Volume để lưu trữ dữ liệu bền vững
 volumes:
   db_data:
 
-# Định nghĩa mạng nội bộ để các container nhìn thấy nhau
 networks:
   app_network:
     driver: bridge
