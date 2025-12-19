@@ -17,21 +17,13 @@ public class PlanningController {
         System.out.println("✅ Đã nhận nhiệm vụ an toàn: " + request.getContent());
         return ResponseEntity.ok(request);
     }
-}
+} 
 
 @Data
 class ObjectiveRequest {
-    @NotNull(message = "Thiếu ID kế hoạch")
-    private Long planId;
-
-    @NotBlank(message = "Nội dung không được để trống")
-    @Size(min = 5, max = 500, message = "Nội dung phải từ 5 đến 500 ký tự")
     private String content;
+    // ... các trường khác ...
 
-    private boolean isBreakthrough;
-    private List<Object> keyResults;
-
-    // Thủ công thêm Getter để đảm bảo trình biên dịch Maven luôn tìm thấy
     public String getContent() {
         return content;
     }
