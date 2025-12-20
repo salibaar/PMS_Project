@@ -5,8 +5,8 @@ const SmartPlanning = () => {
   const [taskContent, setTaskContent] = useState('');
 
   const handleSave = async () => {
-    // Tự động lấy địa chỉ API
-    const API_URL = 'http://localhost:8080/api/v1';
+    // Tự động lấy địa chỉ API từ biến môi trường
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api/v1';
     
     try {
       const response = await fetch(`${API_URL}/planning/objectives`, {
