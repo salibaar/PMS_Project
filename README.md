@@ -81,13 +81,45 @@ Lệnh này sẽ:
 
 ### Bước 4: Truy Cập Ứng Dụng
 
-- **Frontend:** http://localhost:3000
-- **Backend API:** http://localhost:8080
+- **Frontend (Giao diện web):** http://localhost:3000 ← **TRUY CẬP ĐÂY**
+- **Backend API:** http://localhost:8080 (REST API endpoints)
 - **Database:** localhost:5432
+
+**⚠️ Lưu ý:** 
+- Để sử dụng ứng dụng, truy cập **Frontend** tại http://localhost:3000
+- Backend (http://localhost:8080) chỉ là API server, truy cập sẽ thấy thông tin API
 
 ---
 
 ## 📡 API Documentation
+
+### Root Endpoint
+
+**GET** `/`
+
+Trả về thông tin về API và danh sách endpoints có sẵn.
+
+**Response:**
+```json
+{
+  "application": "Planning Management System (PMS)",
+  "version": "1.0.0",
+  "status": "running",
+  "endpoints": {
+    "POST /api/v1/planning/objectives": "Tạo nhiệm vụ mới",
+    "GET /api/v1/health": "Kiểm tra trạng thái hệ thống"
+  },
+  "frontend": {
+    "url": "http://localhost:3000"
+  }
+}
+```
+
+### Health Check
+
+**GET** `/api/v1/health`
+
+Kiểm tra trạng thái backend API.
 
 ### Endpoint: Tạo Nhiệm Vụ Mới
 
@@ -235,6 +267,34 @@ npm test
 ---
 
 ## 🐛 Troubleshooting
+
+### Lỗi: "Whitelabel Error Page" hoặc 404 Not Found
+
+**Triệu chứng:** Thấy trang lỗi trắng với message "This application has no explicit mapping for /error"
+
+**Nguyên nhân:** Đang truy cập backend API (http://localhost:8080) thay vì frontend
+
+**Giải pháp:**
+- Truy cập **Frontend** tại: http://localhost:3000
+- Backend (http://localhost:8080) là REST API server, không có giao diện web
+- Truy cập http://localhost:8080 sẽ thấy thông tin API (JSON response)
+
+### Lỗi: "FATAL: role 'postgres' does not exist" hoặc "password authentication failed"
+
+**Nguyên nhân:** Docker volume có dữ liệu cũ từ lần chạy trước.
+
+**Giải pháp nhanh:**
+```bash
+bash fix-postgres-error.sh
+```
+
+**Hoặc thủ công:**
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+Xem chi tiết trong **HUONG_DAN_CHAY.md**
 
 ### Lỗi: "Port 5432 already in use"
 

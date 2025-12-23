@@ -121,9 +121,19 @@ Frontend sẽ chạy tại: http://localhost:3000
 
 ### Kiểm tra Backend:
 ```bash
-curl http://localhost:8080/api/v1/planning/objectives
-# Kết quả mong đợi: lỗi 405 (Method Not Allowed) - đúng vì endpoint này chỉ nhận POST
+# Kiểm tra trang chủ backend (trả về thông tin API)
+curl http://localhost:8080
+
+# Hoặc mở trình duyệt: http://localhost:8080
+# Sẽ thấy thông tin về API và các endpoints có sẵn
+
+# Kiểm tra health check
+curl http://localhost:8080/api/v1/health
 ```
+
+**Lưu ý quan trọng:** 
+- Backend (http://localhost:8080) là REST API, không có giao diện web
+- Để dùng ứng dụng, truy cập Frontend tại http://localhost:3000
 
 ### Kiểm tra Frontend:
 Mở trình duyệt: http://localhost:3000
@@ -133,6 +143,27 @@ Mở trình duyệt: http://localhost:3000
 ```bash
 docker exec -it postgres_db psql -U postgres -d mydatabase -c "\dt"
 ```
+
+---
+
+## ❌ Xử Lý Lỗi Thường Gặp
+
+### Lỗi: "Whitelabel Error Page" hoặc 404 khi truy cập http://localhost:8080
+**Nguyên nhân:** Bạn đang truy cập backend API trực tiếp
+
+**Giải pháp:**
+1. **Để sử dụng ứng dụng:** Truy cập frontend tại http://localhost:3000
+2. **Để xem thông tin API:** Truy cập http://localhost:8080 (trang chủ backend)
+3. **Để test API:** Dùng Postman hoặc curl:
+   ```bash
+   curl -X POST http://localhost:8080/api/v1/planning/objectives \
+     -H "Content-Type: application/json" \
+     -d '{"planId":2026,"content":"Test nhiệm vụ mới","isBreakthrough":true,"keyResults":[]}'
+   ```
+
+**Giải thích:**
+- Backend (port 8080) là REST API server, không có giao diện web
+- Frontend (port 3000) là giao diện web React mà người dùng tương tác
 
 ---
 
