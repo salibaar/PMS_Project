@@ -26,6 +26,9 @@ public class EvaluationServiceImpl implements EvaluationService {
     @Autowired
     private UserRepository userRepository;
     
+    @Autowired
+    private NotificationService notificationService;
+    
     @Override
     public Evaluation createEvaluation(EvaluationDTO evaluationDTO, UUID userId) {
         // Check if user already evaluated this objective
@@ -44,7 +47,23 @@ public class EvaluationServiceImpl implements EvaluationService {
         evaluation.setCreatedAt(LocalDateTime.now());
         evaluation.setUpdatedAt(LocalDateTime.now());
         
-        return evaluationRepository.save(evaluation);
+        Evaluation savedEvaluation = evaluationRepository.save(evaluation);
+        
+        // Create notification
+        try {
+            notificationService.createNotification(
+                userId,
+                "New Evaluation",
+                "You received a " + evaluationDTO.getRating() + "-star rating",
+                com.gov.pms.entity.Notification.NotificationType.EVALUATION,
+                evaluationDTO.getObjectiveId(),
+                "OBJECTIVE"
+            );
+        } catch (Exception e) {
+            // Don't fail evaluation creation if notification fails
+        }
+        
+        return savedEvaluation;
     }
     
     @Override

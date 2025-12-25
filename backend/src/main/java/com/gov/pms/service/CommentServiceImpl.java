@@ -28,6 +28,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private UserRepository userRepository;
     
+    @Autowired
+    private NotificationService notificationService;
+    
     @Override
     public Comment createComment(CommentDTO commentDTO, UUID userId) {
         Comment comment = new Comment();
@@ -38,7 +41,26 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreatedAt(LocalDateTime.now());
         comment.setUpdatedAt(LocalDateTime.now());
         
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        
+        // Create notification for relevant users
+        // TODO: Notify objective owner or parent comment author
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            String username = user != null ? user.getUsername() : "User";
+            notificationService.createNotification(
+                userId, 
+                "New Comment",
+                username + " added a comment on an objective",
+                com.gov.pms.entity.Notification.NotificationType.COMMENT,
+                commentDTO.getObjectiveId(),
+                "OBJECTIVE"
+            );
+        } catch (Exception e) {
+            // Don't fail comment creation if notification fails
+        }
+        
+        return savedComment;
     }
     
     @Override
