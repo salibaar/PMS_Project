@@ -106,6 +106,12 @@ public class ObjectiveServiceImpl implements ObjectiveService {
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public List<Objective> getAllObjectives() {
+        return objectiveRepository.findAll();
+    }
+    
+    @Override
     public ObjectiveDTO convertToDTO(Objective objective) {
         ObjectiveDTO dto = new ObjectiveDTO();
         dto.setId(objective.getId());

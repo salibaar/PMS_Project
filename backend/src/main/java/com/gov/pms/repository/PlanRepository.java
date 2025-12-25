@@ -22,4 +22,19 @@ public interface PlanRepository extends JpaRepository<Plan, UUID> {
     
     @Query("SELECT p FROM Plan p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', ?1, '%'))")
     Page<Plan> searchByTitle(String keyword, Pageable pageable);
+    
+    @Query("SELECT p FROM Plan p WHERE " +
+           "(:year IS NULL OR p.year = :year) AND " +
+           "(:status IS NULL OR p.status = :status) AND " +
+           "(:minProgress IS NULL OR p.progress >= :minProgress) AND " +
+           "(:maxProgress IS NULL OR p.progress <= :maxProgress)")
+    Page<Plan> findByFilters(Integer year, Plan.PlanStatus status, 
+                             Integer minProgress, Integer maxProgress, Pageable pageable);
+    
+    @Query("SELECT p FROM Plan p WHERE " +
+           "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Plan> fullTextSearch(String keyword, Pageable pageable);
+    
+    List<Plan> findByYear(Integer year);
 }

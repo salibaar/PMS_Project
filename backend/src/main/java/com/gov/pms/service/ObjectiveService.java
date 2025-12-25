@@ -24,6 +24,8 @@ public interface ObjectiveService {
     
     List<Objective> getBreakthroughObjectives(UUID planId);
     
+    List<Objective> getAllObjectives();
+    
     ObjectiveDTO convertToDTO(Objective objective);
     
     Objective convertToEntity(ObjectiveDTO objectiveDTO);

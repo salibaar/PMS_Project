@@ -77,6 +77,12 @@ public class PlanServiceImpl implements PlanService {
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public java.util.List<Plan> getPlansByYear(Integer year) {
+        return planRepository.findByYear(year);
+    }
+    
+    @Override
     public PlanDTO convertToDTO(Plan plan) {
         PlanDTO dto = new PlanDTO();
         dto.setId(plan.getId());

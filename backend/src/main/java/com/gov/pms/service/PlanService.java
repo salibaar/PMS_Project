@@ -23,6 +23,8 @@ public interface PlanService {
     
     Page<Plan> searchPlans(String keyword, Pageable pageable);
     
+    java.util.List<Plan> getPlansByYear(Integer year);
+    
     PlanDTO convertToDTO(Plan plan);
     
     Plan convertToEntity(PlanDTO planDTO);
