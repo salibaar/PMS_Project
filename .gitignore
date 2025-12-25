@@ -1,0 +1,50 @@
+# Environment variables
+.env
+.env.local
+.env.production
+*.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+
+# Docker volumes
+/db_data/
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Maven
+backend/target/
+backend/.mvn/
+
+# Node
+frontend/node_modules/
+frontend/build/
+frontend/.pnpm-debug.log*
+frontend/.yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production builds
+/dist/
+/build/
