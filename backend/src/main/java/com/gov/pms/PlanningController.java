@@ -2,9 +2,6 @@ package com.gov.pms;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import lombok.Data;
@@ -32,19 +29,6 @@ public class PlanningController {
         response.put("data", request);
         
         return ResponseEntity.ok(response);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        
-        logger.error("Validation errors: {}", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 } 
 
